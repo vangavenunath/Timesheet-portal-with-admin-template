@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import Login from 'components/Login/Login'
 import {UserHome} from 'components/UserHome/userhome'
 import AdminLayout from "layouts/Admin.jsx";
-
+import {DatatableCDN} from "components/Datatable/Datatable"
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 function App() {
@@ -24,6 +24,7 @@ function App() {
       <Redirect from="/" to="/admin/dashboard" />
     </Switch>
   </BrowserRouter>}      
+  {/* <DatatableCDN/> */}
     </div>
   );
 }

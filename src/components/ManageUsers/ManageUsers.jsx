@@ -4,6 +4,7 @@ import DataTable, { createTheme } from 'react-data-table-component';
 import { Button, Button1, StyledInput } from '../styles/commonStyles.jsx'
 import { BASE_URL } from 'components/constants';
 import memoize from 'memoize-one';
+import {DatatableCDN} from "components/Datatable/Datatable"
 
 export const ManageUsers = (props) => {
   const [selectedRows, setSelectedRows] = useState([]);
@@ -106,7 +107,7 @@ export const ManageUsers = (props) => {
 
   return (
     <div>
-      <DataTable
+      {/* <DataTable
         title="Users"
         data={tableDataItems}
         columns={columns}
@@ -115,7 +116,8 @@ export const ManageUsers = (props) => {
         contextActions={contextActions(deleteAll)}
         clearSelectedRows={toggledClearRows}
         selectableRows
-      />
+      /> */}
+      <DatatableCDN />
       {console.log(tableDataItems)}
     </div>
 
