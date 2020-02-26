@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import Login from 'components/Login/Login'
-import {UserHome} from 'components/UserHome/userhome'
+import UserLayout from 'layouts/UserLayout.jsx'
 import AdminLayout from "layouts/Admin.jsx";
-import {DatatableCDN} from "components/Datatable/Datatable"
+import AdminHome from "views/AdminHome"
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 function App() {
@@ -17,14 +17,19 @@ function App() {
   return (
     <div className="App">
       {isLogin && <Login setIsAdmin = {setIsAdmin} setIsLogin={setIsLogin} setUsername={setUsername}/>}
-      {!isLogin && !isAdmin && <UserHome username={username}/>}
+      {!isLogin && !isAdmin &&  <BrowserRouter>
+    <Switch>
+      <Route path="/UserLayout" username={username} render={props => <UserLayout {...props} />} />
+      <Redirect from="/" to="/UserLayout/dashboard" />
+    </Switch>
+  </BrowserRouter>}
       {!isLogin && isAdmin && <BrowserRouter>
     <Switch>
       <Route path="/admin" render={props => <AdminLayout {...props} />} />
       <Redirect from="/" to="/admin/dashboard" />
     </Switch>
   </BrowserRouter>}      
-  {/* <DatatableCDN/> */}
+  {/* <AdminHome/> */}
     </div>
   );
 }

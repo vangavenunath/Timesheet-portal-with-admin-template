@@ -15,10 +15,27 @@ import { DropdownMultipleSelection } from './MultiDropdown'
 import { Grid, Row, Col, Table } from "react-bootstrap";
 
 export const TimeSheets = (props) => {
+
+  const pad = (n, width, z) => {
+    z = z || '0';
+    n = n + '';
+    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+  }
+
+  const formatDate1 = (date) => {
+    return (pad(parseInt((new Date(date)).getMonth())+1,2) + '/'+pad((new Date(date)).getDate(),2)+'/'+(new Date(date)).getFullYear());  
+  }
+
   const [tableDataItems, setTableDataItems] = useState([{ username: '', create_date: '', start_time: '', end_time: '', comment: '' }])
   const [users, setUsers] = useState([])
-  const [fromDate, setFromDate] = useState(new Date(new Date(Date.now() - 24 * 60 * 60000).toLocaleDateString({ timezone: "Australia/Melbourne" })))
-  const [toDate, setToDate] = useState(new Date(new Date(Date.now() - 24 * 60 * 60000).toLocaleDateString({ timezone: "Australia/Melbourne" })))
+  const defaultDate = formatDate1(Date.now() - 24 * 60 * 60000);
+  const [fromDate, setFromDate] = useState(defaultDate)
+  const [toDate, setToDate] = useState(defaultDate)
+
+  const formatDate = (date) => {
+    return (new Date(date)).getFullYear()+'-'+pad((parseInt((new Date(date)).getMonth())+1),2) + '-'+pad((new Date(date)).getDate(),2);  
+  }
+
 
   useEffect(() => {
     getLoginTimes()
@@ -26,7 +43,7 @@ export const TimeSheets = (props) => {
   }, [users, fromDate, toDate])
 
   const getLoginTimes = () => {
-    const requestData = { 'username': users, 'from_date': new Date(fromDate.valueOf() + 11 * 60 * 60000).toISOString(), 'to_date': new Date(toDate.valueOf() + 11 * 60 * 60000).toISOString() }
+    const requestData = { 'username': users, 'from_date': formatDate(fromDate), 'to_date': formatDate(toDate) }
     console.log('=======requestData=========', users)
     axios({
       method: 'POST',
@@ -79,22 +96,28 @@ export const TimeSheets = (props) => {
       sortable: true,
     },
   ];
-
+  const daterange = () => {
+    window.$y('input[name="daterange"]').daterangepicker({
+      opens: 'left'
+    }, function(start, end, label) {
+      setFromDate(start)
+      setToDate(end)
+      console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+    })
+  }
 
   return (
     <div>
       <Grid>
         <Row>
           <Col md={3}>
+            <label>Select User(s) </label>&nbsp;&nbsp;
             <DropdownMultipleSelection setUsers={setUsers} />
           </Col>
           <Col md={3}>
-            <label>From Date </label>&nbsp;&nbsp;
-            <DatePicker onChange={setFromDate} value={fromDate} placeholder={new Date()} />
-          </Col>
-          <Col md={3}>
-            <label>To Date </label>&nbsp;&nbsp;
-            <DatePicker onChange={setToDate} value={toDate} placeholder={new Date()} />
+            <label>Select Date Range </label>&nbsp;&nbsp;
+            <input type="text" name="daterange" value={formatDate1(fromDate)+' - '+formatDate1(toDate)} />
+            {daterange()}
           </Col>
         </Row>
         <Row>

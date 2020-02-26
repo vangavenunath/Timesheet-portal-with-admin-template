@@ -18,7 +18,7 @@
 import React, { Component } from "react";
 import { NavItem, Nav, NavDropdown, MenuItem } from "react-bootstrap";
 
-class AdminNavbarLinks extends Component {
+class UserNavbarLinks extends Component {
   render() {
     const logout = () => {
       window.location.href = '/';
@@ -55,4 +55,4 @@ class AdminNavbarLinks extends Component {
   }
 }
 
-export default AdminNavbarLinks;
+export default UserNavbarLinks;

@@ -16,8 +16,10 @@
 
 */
 import Dashboard from "views/Dashboard.jsx";
-import UserProfile from "views/UserProfile.jsx";
+import AdminHome from "views/AdminHome";
+import LogTime from "views/LogTime";
 import TableList from "views/TableList.jsx";
+import ManageLeaves from "views/ManageLeaves.jsx";
 import Typography from "views/Typography.jsx";
 import Icons from "views/Icons.jsx";
 import Maps from "views/Maps.jsx";
@@ -36,7 +38,7 @@ const dashboardRoutes = [
     path: "/user",
     name: "Manage Users",
     icon: "pe-7s-user",
-    component: UserProfile,
+    component: AdminHome,
     layout: "/admin"
   },
   {
@@ -82,6 +84,30 @@ const dashboardRoutes = [
   //   component: Upgrade,
   //   layout: "/admin"
   // }
+];
+
+export const UserDashboardRoutes = [
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    icon: "pe-7s-graph",
+    component: Dashboard,
+    layout: "/UserLayout"
+  },
+  {
+    path: "/user",
+    name: "Log Time",
+    icon: "pe-7s-user",
+    component: LogTime,
+    layout: "/UserLayout"
+  },
+  {
+    path: "/table",
+    name: "Manage Leaves",
+    icon: "pe-7s-note2",
+    component: ManageLeaves,
+    layout: "/UserLayout"
+  }
 ];
 
 export default dashboardRoutes;
