@@ -41,6 +41,7 @@ class UserLayout extends Component {
   }
   
   getRoutes = UserDashboardRoutes => {
+    console.log('Parent props============='+this.props.username)
     return UserDashboardRoutes.map((prop, key) => {
       if (prop.layout === "/UserLayout") {
         return (
@@ -48,7 +49,7 @@ class UserLayout extends Component {
             path={prop.layout + prop.path}
             render={props => (
               <prop.component
-                {...props}
+                {...props} username={this.props.username}
               />
             )}
             key={key}

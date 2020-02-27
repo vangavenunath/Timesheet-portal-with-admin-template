@@ -13,13 +13,14 @@ function App() {
   useEffect(() => {
     // getConnection().then(result => console.log(result))
   })
+  const props = {"username":username}
 
   return (
     <div className="App">
       {isLogin && <Login setIsAdmin = {setIsAdmin} setIsLogin={setIsLogin} setUsername={setUsername}/>}
       {!isLogin && !isAdmin &&  <BrowserRouter>
     <Switch>
-      <Route path="/UserLayout" username={username} render={props => <UserLayout {...props} />} />
+      <Route path="/UserLayout" render={props => <UserLayout {...props} username ={username} />}  />
       <Redirect from="/" to="/UserLayout/dashboard" />
     </Switch>
   </BrowserRouter>}

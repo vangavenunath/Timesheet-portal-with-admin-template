@@ -51,6 +51,10 @@ export default () => {
         //   'Authorization': 'Basic ' + userpass
       }
     }).then(result => {
+      console.log("result.data",result.data.toString())
+      if (result.data.toString() == '1') {
+        alert("User already exists !!")
+      }
       setReloadData(!reloadData)
       console.log("insert process done", result)
     })

@@ -38,11 +38,33 @@ export const TimeSheets = (props) => {
 
 
   useEffect(() => {
+    daterange()
     getLoginTimes()
     console.log(tableDataItems)
   }, [users, fromDate, toDate])
 
+
+  const daterange = () => {
+    window.$y('input[name="daterange"]').daterangepicker({
+      opens: 'left'
+    }, function(start, end, label) {
+      setFromDate(start)
+      setToDate(end)
+      console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+    })
+  }
+
   const getLoginTimes = () => {
+    
+    let table = window.$x('#table_id').DataTable({
+      dom: 'Bfrtip',
+      buttons: [
+          'copy', 'csv', 'excel', 'pdf'
+      ],
+      destroy:true,
+      XSS: false
+  });
+    
     const requestData = { 'username': users, 'from_date': formatDate(fromDate), 'to_date': formatDate(toDate) }
     console.log('=======requestData=========', users)
     axios({
@@ -57,55 +79,25 @@ export const TimeSheets = (props) => {
         let arr = []
         console.log("===================arr1=========", arr1, typeof (arr1))
         for (var row = 0; row < arr1.length; row++) {
-          arr.push({
-            username: arr1[row][0], create_date: arr1[row][1], start_time: arr1[row][2], end_time: arr1[row][3], comment: <CKEditor
-              editor={ClassicEditor}
-              config={{ toolbar: [] }}
-              disabled={true}
-              data={arr1[row][4]} />
-          })
+          arr.push([arr1[row][0], arr1[row][1], arr1[row][2], arr1[row][3], arr1[row][4]
+          ])
+          // <CKEditor
+          //     editor={ClassicEditor}
+          //     config={{ toolbar: [] }}
+          //     disabled={true}
+          //     data={arr1[row][4]} />
         }
-        setTableDataItems(arr)
+        return arr
       })
-      .catch(error => console.warn(error))
-  }
-  const columns = [
-    {
-      name: 'Username',
-      selector: 'username',
-      sortable: true,
-    },
-    {
-      name: 'Logged Date',
-      selector: 'create_date',
-      sortable: true,
-    },
-    {
-      name: 'Start Time',
-      selector: 'start_time',
-      sortable: true,
-    },
-    {
-      name: 'End Time',
-      selector: 'end_time',
-      sortable: true,
-    },
-    {
-      name: 'Comment',
-      selector: 'comment',
-      sortable: true,
-    },
-  ];
-  const daterange = () => {
-    window.$y('input[name="daterange"]').daterangepicker({
-      opens: 'left'
-    }, function(start, end, label) {
-      setFromDate(start)
-      setToDate(end)
-      console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+      .then(arr => {
+        table.clear()
+        table.rows.add(arr).draw();
     })
+      .catch(error => console.warn(error))
+      return table;
   }
 
+  
   return (
     <div>
       <Grid>
@@ -116,16 +108,25 @@ export const TimeSheets = (props) => {
           </Col>
           <Col md={3}>
             <label>Select Date Range </label>&nbsp;&nbsp;
-            <input type="text" name="daterange" value={formatDate1(fromDate)+' - '+formatDate1(toDate)} />
-            {daterange()}
+            <input type="text" name="daterange" class="form-control pull-right" value={formatDate1(fromDate)+' - '+formatDate1(toDate)} />
+            
           </Col>
         </Row>
         <Row>
-          <DataTable
-            title="User Login Details"
-            data={tableDataItems}
-            columns={columns}
-          />
+        <br/><br/>
+          <table id="table_id" className="display" >
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Logged Date</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Comment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </Row>
       </Grid>
     </div>

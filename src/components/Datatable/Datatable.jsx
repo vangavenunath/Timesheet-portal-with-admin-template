@@ -22,10 +22,7 @@ export const DatatableCDN = (props) => {
         });
         window.$x('#table_id tbody').on( 'click', 'tr', function () {
             console.log("Toggle Functionality enabled"+this.toString())
-            // window.$x(this).removeClass("odd");
-            // window.$x(this).removeClass("even");
             window.$x(this).toggleClass('selected');
-            // window.$x(this).addClass("selected");1
         } );
         window.$x('#button').click( function () {
             deleteAll(Array.from(window.$x('#table_id').DataTable({

@@ -10,7 +10,7 @@ export const TimeLogDataTableCDN = (props) => {
 
     useEffect(() => {
         getLoginTimes()
-      }, [props.username])
+      }, [props.username, props.reloadData])
 
     
       const getLoginTimes = () => {
@@ -39,15 +39,15 @@ export const TimeLogDataTableCDN = (props) => {
             let arr = []
             console.log("===================arr1=========", arr1, typeof (arr1))
             for (var row = 0; row < arr1.length; row++) {
-              arr.push({
-                create_date: arr1[row][1], start_time: arr1[row][2], end_time: arr1[row][3], comment: <CKEditor
-                  editor={ClassicEditor}
-                  config={{ toolbar: [] }} //{removePlugins: 'toolbar', allowedContent: 'p h1 h2 strong em; a[!href]; img[!src,width,height];'}
-                  disabled={true}
-                  data={arr1[row][4]} />
-              }) //username: arr1[row][0],
+              arr.push([arr1[row][1], arr1[row][2], arr1[row][3], arr1[row][4]]) 
             }
             // setTableDataItems(arr)
+            //<CKEditor
+                  // editor={ClassicEditor}
+                  // config={{ toolbar: [] }} 
+                  // disabled={true}
+                  // data={arr1[row][4]} />
+
             console.log(arr)
             return arr
           })

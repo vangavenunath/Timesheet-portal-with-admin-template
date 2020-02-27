@@ -51,3 +51,58 @@ export const StyledInput = styled.input`
     box-sizing: border-box;
   }
 `
+export const StyledTick = styled.button`
+ {
+  position: absolute;
+  right: 150px;
+  top: 50%;
+  margin-top: -13px;
+  z-index: 1033;
+  background-color: #FFFFFF;
+  display: block;
+  border-radius: 50%;
+  opacity: 0.8;
+  line-height: 20px;
+  font-size: 12px;
+  width: 100px;
+  height: 25px;
+  outline: 0 !important;
+  text-align: center;
+  color:#000000;
+  padding: 3px;
+  font-weight: 300;
+  box-shadow: 0;
+   }
+  :hover {
+    opacity: 1; }
+    :active {
+      box-shadow: 0; }
+`
+
+export const StyledClose = styled.button`
+{
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  margin-top: -13px;
+  z-index: 1033;
+  background-color: #FFFFFF;
+  display: block;
+  border-radius: 50%;
+  opacity: 0.8;
+  line-height: 20px;
+  font-size: 12px;
+  width: 100px;
+  height: 25px;
+  outline: 0 !important;
+  text-align: center;
+  color:#000000;
+  padding: 3px;
+  font-weight: 300;
+  box-shadow: 0;
+   }
+  :hover {
+    opacity: 1; }
+    :active {
+      box-shadow: 0; }
+`

@@ -41,16 +41,11 @@ import { useState } from "react";
 
 export default (props) => {
   const [reloadData, setReloadData] = useState(true)
-  const [date, setDate] = useState(new Date('2020-02-18'))
   const [fromTime, setFromTime] = useState('09:00')
   const [toTime, setToTime] = useState('17:00')
   const [comment, setComment] = useState('')
-  const [tableDataItems, setTableDataItems] = useState([{ username: '', create_date: '', start_time: '', end_time: '', comment: '' }])
-
-  useEffect(() => {
-    getLoginTimes()
-  }, [props.username])
-
+  const defaultDate = ((new Date()).getMonth() + 1) + '/' + (new Date()).getDate() + '/' + (new Date()).getFullYear()
+  const [date, setDate] = useState(new Date(defaultDate))
 
   const logDate = () => {
     window.$y('input[name="logDate"]').daterangepicker({
@@ -60,14 +55,13 @@ export default (props) => {
       maxYear: parseInt(window.moment().format('YYYY'), 10)
     }, function (start, end, label) {
       var years = start.format('YYYY-MM-DD')
-      alert("You are " + years + " years old!");
       setDate(years)
     });
   }
 
-  const handleClick = () => {
-    const userFormDetails = { username: props.username, create_date: new Date(date.valueOf() + 11 * 60 * 60000).toISOString().split('T')[0], start_time: fromTime, end_time: toTime, comment: comment }
-    console.log(date.toISOString().split('T')[0], fromTime, toTime, comment)
+  const handleClick = (evt) => {
+    evt.preventDefault()
+    const userFormDetails = { username: props.username, create_date: (new Date(date)).toISOString().split('T')[0], start_time: fromTime, end_time: toTime, comment: comment }
     axios({
       method: 'POST',
       url: BASE_URL + 'user_ops',
@@ -77,42 +71,13 @@ export default (props) => {
       }
     })
       .then(result => {
-        console.log('=========POST=============' + result)
-      })
-      .then(() => getLoginTimes())
-  }
-
-  const getLoginTimes = () => {
-    const requestData = { username: [props.username] }
-    console.log('=======requestData=========', requestData)
-    axios({
-      method: 'POST',
-      url: BASE_URL + 'userlog',
-      data: requestData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(result => {
-        console.log(result)
-        const arr1 = eval(result.data)
-        // console.log("Get process done",Array.from(result.data),typeof(Array.from(result.data)))
-        let arr = []
-        console.log("===================arr1=========", arr1, typeof (arr1))
-        for (var row = 0; row < arr1.length; row++) {
-          arr.push({
-            create_date: arr1[row][1], start_time: arr1[row][2], end_time: arr1[row][3], comment: <CKEditor
-              editor={ClassicEditor}
-              config={{ toolbar: [] }} //{removePlugins: 'toolbar', allowedContent: 'p h1 h2 strong em; a[!href]; img[!src,width,height];'}
-              disabled={true}
-              data={arr1[row][4]} />
-          }) //username: arr1[row][0],
+        console.log('=========POST=============' + result.data)
+        if (result.data == '[[1]]') {
+          alert("Already logged for the given date !!")
         }
-        setTableDataItems(arr)
       })
+      .then(() => setReloadData(!reloadData))
   }
-
-  const defaultDate = ((new Date()).getMonth() + 1) + '/' + (new Date()).getDate() + '/' + (new Date()).getFullYear()
 
   return (
     <div className="content">
@@ -126,16 +91,16 @@ export default (props) => {
                   <form>
                     <div className="col-md-2">
                       <label>Date</label>
-                      <input type="text" name="logDate" value={defaultDate} />
+                      <input type="text" name="logDate" class="form-control pull-right" value={defaultDate} />
                       {logDate()}
                     </div>
                     <div className="col-md-2">
                       <label>From Time</label><br />
-                      <TimeField value={fromTime} onChange={(evt) => setFromTime(evt.target.value)} style={{"width":"100%"}} />
+                      <TimeField value={fromTime} class="form-control" onChange={(evt) => setFromTime(evt.target.value)} style={{"width":"100%"}} />
                     </div>
                     <div className="col-md-2">
                       <label>To Time</label><br />
-                      <TimeField value={toTime} onChange={(evt) => setToTime(evt.target.value)}  style={{"width":"100%"}}/>
+                      <TimeField value={toTime} class="form-control" onChange={(evt) => setToTime(evt.target.value)}  style={{"width":"100%"}}/>
                     </div>
                     <div className="col-md-3">
                       <CKEditor
