@@ -21,8 +21,16 @@ import { StyledTick, StyledClose } from 'components/styles/commonStyles'
 import axios from 'axios';
 import { BASE_URL } from 'components/constants';
 import Button from "components/CustomButton/CustomButton.jsx";
+import {getNotifications} from 'actions/API'
 
 const Notifications = () => {
+  const [reloadData, setReloadData] = useState(true)
+  const [notifications, setNotifications] = useState([])
+
+  useEffect(() =>{
+    getNotifications().then( result => setNotifications(result))
+  },[reloadData])
+
   const handleTick = (evt) => {
     console.log(evt.target.name)
     axios({
@@ -30,31 +38,32 @@ const Notifications = () => {
       url: BASE_URL + 'leaves',
       data: {username:evt.target.name.split('|')[0], leave_date:evt.target.name.split('|')[1], status:'Approved'},
       headers: { 'Content-Type': 'application/json' }
-    }).then(() => )
+    }).then((result) => setReloadData(!reloadData))
   }
+  
   const handleClose = (evt) => {
     console.log(evt.target.name)
-  }
-  const [reloadData, setReloadData] = useState(true)
-  const [notifications, setNotifications] = useState([])
-
-  useEffect(() =>{
-    getNotifications()
-  },[reloadData])
-
-  const getNotifications = () => {
     axios({
-      method: 'POST',
+      method: 'PUT',
       url: BASE_URL + 'leaves',
-      data: {},
+      data: {username:evt.target.name.split('|')[0], leave_date:evt.target.name.split('|')[1], status:'Rejected'},
       headers: { 'Content-Type': 'application/json' }
-    })
-      .then(result => {
-        const arr1 = eval(result.data)
-        console.log(arr1)
-        setNotifications(arr1)
-      })
+    }).then((result) => setReloadData(!reloadData))
   }
+
+  // const getNotifications = () => {
+  //   axios({
+  //     method: 'POST',
+  //     url: BASE_URL + 'leaves',
+  //     data: {},
+  //     headers: { 'Content-Type': 'application/json' }
+  //   })
+  //     .then(result => {
+  //       const arr1 = eval(result.data)
+  //       console.log(arr1)
+  //       setNotifications(arr1)
+  //     })
+  // }
 
   return (
     <div className="content">
@@ -80,15 +89,6 @@ const Notifications = () => {
                   <span>{notif[0]} applied leave for {notif[1]} date</span>
                   </Alert>)
                   })}
-                  <Alert bsStyle="info">
-                    <StyledTick type="button" aria-hidden="true" onClick={handleTick}>
-                      &#x2713;
-                    </StyledTick>
-                    <StyledClose type="button" aria-hidden="true" onClick={handleClose}>
-                      &#x2715;
-                    </StyledClose>
-                    <span>This is a notification with close button.</span>
-                  </Alert>
                 </Col>
               </Row>
             </div>
@@ -98,4 +98,6 @@ const Notifications = () => {
         );
       }
     
-    export default Notifications;
+    
+
+export default Notifications;

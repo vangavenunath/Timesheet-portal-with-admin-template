@@ -15,20 +15,35 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { NavItem, Nav, NavDropdown, MenuItem } from "react-bootstrap";
+import {getNotifications} from 'actions/API'
+import Sidebar from 'components/Sidebar/Sidebar'
+import { Link, useHistory } from "react-router-dom";
+const AdminNavbarLinks = () => {
 
-class AdminNavbarLinks extends Component {
-  render() {
+  const [notifications, setNotifications] = useState([])
+  
+  useEffect(() => {
+    getNotifications().then( result => setNotifications(result))
+  })
+
+  const history = useHistory()
+
     const logout = () => {
       window.location.href = '/';
       return false;
   }
+
+const handleNotificationClick = () => {
+   history.push('/admin/notifications')
+}
+
     const notification = (
       <div>
         <i className="fa fa-globe" />
         <b className="caret" />
-        <span className="notification">2</span>
+        {notifications.length !== 0 && <span className="notification">{notifications.length}</span>}
         <p className="hidden-lg hidden-md">Notification</p>
       </div>
     );
@@ -41,8 +56,9 @@ class AdminNavbarLinks extends Component {
             noCaret
             id="basic-nav-dropdown"
           >
-            <MenuItem eventKey={2.1}>Notification 1</MenuItem>
-            <MenuItem eventKey={2.2}>Notification 2</MenuItem>
+            {notifications.map((notif) => {
+                    return (<MenuItem eventKey={2.1} onClick={handleNotificationClick}>{notif[0]} applied leave for {notif[1]} date</MenuItem>)
+                  })}
           </NavDropdown>
         </Nav>
         <Nav pullRight>
@@ -52,7 +68,6 @@ class AdminNavbarLinks extends Component {
         </Nav>
       </div>
     );
-  }
 }
 
 export default AdminNavbarLinks;

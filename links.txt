@@ -1,2 +1,4 @@
 https://www.daterangepicker.com/#examples
 https://datatables.net/extensions/buttons/examples/initialisation/simple.html
+https://tcpdf.org/
+https://getbootstrap.com/docs/4.0/components/modal/
