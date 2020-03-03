@@ -51,20 +51,6 @@ const Notifications = () => {
     }).then((result) => setReloadData(!reloadData))
   }
 
-  // const getNotifications = () => {
-  //   axios({
-  //     method: 'POST',
-  //     url: BASE_URL + 'leaves',
-  //     data: {},
-  //     headers: { 'Content-Type': 'application/json' }
-  //   })
-  //     .then(result => {
-  //       const arr1 = eval(result.data)
-  //       console.log(arr1)
-  //       setNotifications(arr1)
-  //     })
-  // }
-
   return (
     <div className="content">
       <Grid fluid>

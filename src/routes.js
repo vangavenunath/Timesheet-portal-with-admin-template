@@ -25,6 +25,7 @@ import Icons from "views/Icons.jsx";
 import Maps from "views/Maps.jsx";
 import Notifications from "views/Notifications.jsx";
 import Upgrade from "views/Upgrade.jsx";
+import ManagePay from "views/ManagePay.jsx"
 
 const dashboardRoutes = [
   {
@@ -106,6 +107,13 @@ export const UserDashboardRoutes = [
     name: "Manage Leaves",
     icon: "pe-7s-note2",
     component: ManageLeaves,
+    layout: "/UserLayout"
+  },
+  {
+    path: "/pay",
+    name: "Manage Pay",
+    icon: "pe-7s-cash",
+    component: ManagePay,
     layout: "/UserLayout"
   }
 ];

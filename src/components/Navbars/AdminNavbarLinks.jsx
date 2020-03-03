@@ -21,12 +21,12 @@ import {getNotifications} from 'actions/API'
 import Sidebar from 'components/Sidebar/Sidebar'
 import { Link, useHistory } from "react-router-dom";
 const AdminNavbarLinks = () => {
-
+  const [reloadData, setReloadData] = useState(true)
   const [notifications, setNotifications] = useState([])
   
   useEffect(() => {
     getNotifications().then( result => setNotifications(result))
-  })
+  },[reloadData])
 
   const history = useHistory()
 
