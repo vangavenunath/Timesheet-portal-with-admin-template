@@ -14,100 +14,84 @@ import './login.css'
 import { BASE_URL } from "../constants";
 import { FormInputs } from "components/FormInputs/FormInputs.jsx";
 import { Container } from "semantic-ui-react";
+import { checkUser } from 'actions/API'
+import { useState } from "react";
 
-export default class Login extends Component {
-  constructor(props) {
-    super(props);
+export default (props) => {
+  const [userDetails, setUserDetails] = useState({ username: "", password: "", loading: false, errorMsg: "" })
 
-    this.state = {
-      username: "",
-      password: "",
-      loading: false,
-      errorMsg: ""
-    };
+  const validateForm = () => {
+    return userDetails.username.length > 0 && userDetails.password.length > 0 && !userDetails.loading;
   }
 
-  validateForm() {
-    return this.state.username.length > 0 && this.state.password.length > 0 && !this.state.loading;
+  const handleChange = (event) => {
+    setUserDetails(prev => ({ 
+      ...prev,
+      [event.target.id]: event.target.value,
+  }))
   }
 
-  handleChange = event => {
-    this.setState({
-      [event.target.id]: event.target.value
-    });
-  }
-
-  handleSubmit = event => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    const userpass = btoa(this.state.username + ':' + this.state.password)
-    this.setState({ loading: true })
-    axios({
-      method: 'POST',
-      url: BASE_URL,
-      data: this.state,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + userpass
-      }
-    })
+    const userpass = btoa(userDetails.username + ':' + userDetails.password)
+    setUserDetails({ loading: true })
+    checkUser(userDetails)
       .then((response) => {
         if (response.data.toString() !== '') {
-          this.props.setIsLogin(false)
-          this.props.setIsAdmin(this.state.username == "admin")
-          this.props.setUsername(this.state.username)
-          this.setState({ errorMsg: "" })
+          props.setIsLogin(false)
+          props.setIsAdmin(userDetails.username == "admin")
+          props.setUsername(userDetails.username)
+          setUserDetails({ ...userDetails, errorMsg: "" })
         }
         else {
-          this.setState({ errorMsg: "Invalid username or password" })
+          setUserDetails({ ...userDetails, errorMsg: "Invalid username or password" })
         }
       })
       .catch(err => alert(err))
-      .finally(() => this.setState({ loading: false }))
+      .finally(() => setUserDetails({ ...userDetails, loading: false }))
   }
 
-  render() {
-    return (
-      <div className="Login">
-        <Container fluid={true}>
-          <Row>
-            <Col>
-              <h1>Welcome to Timesheet Portal</h1>
-              <FormInputs
-                ncols={["col-md-5"]}
-                properties={[
-                  {
-                    label: "Username",
-                    type: "text",
-                    id: "username",
-                    bsClass: "form-control",
-                    placeholder: "Enter Username",
-                    defaultValue: "",
-                    onChange: this.handleChange
-                  }
-                ]}
-              />
-              <FormInputs
-                ncols={["col-md-5"]}
-                properties={[
-                  {
-                    label: "Password",
-                    type: "password",
-                    id: "password",
-                    bsClass: "form-control",
-                    placeholder: "Enter Password",
-                    defaultValue: "",
-                    onChange: this.handleChange
-                  }
-                ]}
-              />
-              {this.state.errorMsg}
-              <Button bsStyle="info" fill type="submit" disabled={!this.validateForm()} onClick={this.handleSubmit}>
-                Log In
+  return (
+    <div className="Login">
+      <Container fluid={true}>
+        <Row>
+          <Col>
+            <h1>Welcome to Timesheet Portal</h1>
+            <FormInputs
+              ncols={["col-md-5"]}
+              properties={[
+                {
+                  label: "Username",
+                  type: "text",
+                  id: "username",
+                  bsClass: "form-control",
+                  placeholder: "Enter Username",
+                  defaultValue: "",
+                  onChange: handleChange
+                }
+              ]}
+            />
+            <FormInputs
+              ncols={["col-md-5"]}
+              properties={[
+                {
+                  label: "Password",
+                  type: "password",
+                  id: "password",
+                  bsClass: "form-control",
+                  placeholder: "Enter Password",
+                  defaultValue: "",
+                  onChange: handleChange
+                }
+              ]}
+            />
+            {userDetails.errorMsg}
+            <Button bsStyle="info" fill type="submit" disabled={!validateForm()} onClick={handleSubmit}>
+              Log In
               </Button>
-            </Col>
-          </Row>
-        </Container>
-      </div>
-    );
-  }
+          </Col>
+        </Row>
+      </Container>
+    </div>
+  );
 }

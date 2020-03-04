@@ -12,3 +12,15 @@ export const getNotifications = async() => {
     arr1 = eval(result.data)
     return arr1
   }
+
+  export const checkUser = async(requestData) => {
+    axios({
+      method: 'POST',
+      url: BASE_URL,
+      data: requestData,
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Authorization': 'Basic ' + userpass
+      }
+    })
+  }
