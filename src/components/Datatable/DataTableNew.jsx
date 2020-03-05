@@ -1,6 +1,7 @@
-import axios from 'axios';
 import React, { useState, useEffect, useRef } from 'react';
 import { BASE_URL } from 'components/constants';
+import {deleteSelectedUsers, getAllUserDetails} from 'actions/API'
+
 const $ = require('jquery');
 $.DataTable = require('datatables.net');
 
@@ -56,11 +57,7 @@ export const DatatableLocal = (props) => {
 
     const getUsers = async() => {
 
-        axios({ method: 'GET',
-          url: BASE_URL,
-          data: {},
-          headers: {'Content-Type': 'application/json'}
-        })
+        getAllUserDetails()
           .then(result => {
             let arr = []
             for (var row in result.data) {

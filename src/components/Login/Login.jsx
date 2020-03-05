@@ -18,37 +18,36 @@ import { checkUser } from 'actions/API'
 import { useState } from "react";
 
 export default (props) => {
-  const [userDetails, setUserDetails] = useState({ username: "", password: "", loading: false, errorMsg: "" })
+  const [errorMsg, setErrorMsg] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false)
 
   const validateForm = () => {
-    return userDetails.username.length > 0 && userDetails.password.length > 0 && !userDetails.loading;
-  }
-
-  const handleChange = (event) => {
-    setUserDetails(prev => ({ 
-      ...prev,
-      [event.target.id]: event.target.value,
-  }))
+    return username.length > 0 && password.length > 0 && !loading;
   }
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const userpass = btoa(userDetails.username + ':' + userDetails.password)
-    setUserDetails({ loading: true })
-    checkUser(userDetails)
-      .then((response) => {
-        if (response.data.toString() !== '') {
+    // const userpass = btoa(userDetails.username + ':' + userDetails.password)
+    // setUserDetails({ loading: true })
+    checkUser({'username':username, 'password': password})
+      .then((result) => {
+        console.log(result)
+        if ((result['message'] == "")) {
           props.setIsLogin(false)
-          props.setIsAdmin(userDetails.username == "admin")
-          props.setUsername(userDetails.username)
-          setUserDetails({ ...userDetails, errorMsg: "" })
+          props.setIsAdmin(username == "admin")
+          props.setUsername(username) 
+          setErrorMsg("")
         }
         else {
-          setUserDetails({ ...userDetails, errorMsg: "Invalid username or password" })
+          setErrorMsg(result['message']);
         }
       })
       .catch(err => alert(err))
-      .finally(() => setUserDetails({ ...userDetails, loading: false }))
+      .finally(() => console.log("finally")
+      //  setUserDetails({ ...userDetails, loading: false })
+      )
   }
 
   return (
@@ -67,7 +66,7 @@ export default (props) => {
                   bsClass: "form-control",
                   placeholder: "Enter Username",
                   defaultValue: "",
-                  onChange: handleChange
+                  onChange: (event) => setUsername(event.target.value)
                 }
               ]}
             />
@@ -81,11 +80,11 @@ export default (props) => {
                   bsClass: "form-control",
                   placeholder: "Enter Password",
                   defaultValue: "",
-                  onChange: handleChange
+                  onChange: (event) => setPassword(event.target.value)
                 }
               ]}
             />
-            {userDetails.errorMsg}
+            {errorMsg}
             <Button bsStyle="info" fill type="submit" disabled={!validateForm()} onClick={handleSubmit}>
               Log In
               </Button>

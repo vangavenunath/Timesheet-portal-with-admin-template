@@ -19,7 +19,7 @@ import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
 import NotificationSystem from "react-notification-system";
 
-import UserNavbar from "components/Navbars/AdminNavbar";
+import UserNavbar from "components/Navbars/UserNavbar";
 import Sidebar from "components/Sidebar/Sidebar";
 
 import { style } from "variables/Variables.jsx";

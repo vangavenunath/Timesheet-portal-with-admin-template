@@ -1,9 +1,9 @@
-import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { BASE_URL } from 'components/constants';
 import Button from "components/CustomButton/CustomButton.jsx";
 import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import {getLoginTimesByUser} from 'actions/API'
 
 export const TimeLogDataTableCDN = (props) => {
     const [toggle, setToggle] = useState(true)
@@ -23,15 +23,7 @@ export const TimeLogDataTableCDN = (props) => {
         });
         const requestData = { username: [props.username] }
         console.log('=======requestData=========', requestData)
-        axios({
-          method: 'POST',
-          url: BASE_URL + 'userlog',
-          data: requestData,
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-        
+        getLoginTimesByUser(requestData)
           .then(result => {
             console.log(result)
             const arr1 = eval(result.data)

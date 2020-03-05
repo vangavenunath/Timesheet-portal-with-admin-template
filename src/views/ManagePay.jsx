@@ -13,8 +13,10 @@ import Button from "components/CustomButton/CustomButton.jsx";
 import axios from 'axios';
 import { BASE_URL } from 'components/constants';
 // import { PDFViewer } from '@react-pdf/renderer';
-import { pdfDocGenerator } from 'components/Payslip/Payslip'
+import  { Document } from 'components/Payslip/Payslip'
 import { useState } from "react";
+import {DropdownSingleSelection} from 'components/Dropdowns/SingleDropdown'
+import Card from "components/Card/Card";
 
 export default (props) => {
     const [reloadData, setReloadData] = useState(true)
@@ -23,18 +25,6 @@ export default (props) => {
     const [comment, setComment] = useState('')
     const defaultDate = ((new Date()).getMonth() + 1) + '/' + (new Date()).getDate() + '/' + (new Date()).getFullYear()
     const [date, setDate] = useState(new Date(defaultDate))
-
-    const logDate = () => {
-        window.$y('input[name="logDate"]').daterangepicker({
-            singleDatePicker: true,
-            showDropdowns: true,
-            minYear: 2018,
-            maxYear: parseInt(window.moment().format('YYYY'), 10)
-        }, function (start, end, label) {
-            var years = start.format('YYYY-MM-DD')
-            setDate(years)
-        });
-    }
 
     const handleClick = (evt) => {
         evt.preventDefault()
@@ -58,11 +48,20 @@ export default (props) => {
 
     return (
         <div className="content" style = {{"height":"100%"}}>
-            <Grid fluid style = {{"height":"100%"}}>
-            {/* <PDFViewer width="100%" height="100%"> */}
-                        <pdfDocGenerator />
-                    {/* </PDFViewer> */}
-            </Grid>
+            <Card
+              title="Select Pay Month"
+              content={<Grid fluid style = {{"height":"90%"}}> 
+              <DropdownSingleSelection />
+              </Grid>
+              } 
+              />
+            <Card
+              title=""
+              content={<Grid fluid style = {{"height":"90%"}}> 
+              <Document />
+              </Grid>
+              }/>
+            
         </div>
     );
 }

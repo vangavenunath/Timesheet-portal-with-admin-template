@@ -1,7 +1,7 @@
-import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { BASE_URL } from 'components/constants';
 import Button from "components/CustomButton/CustomButton.jsx";
+import {deleteSelectedUsers, getAllUserDetails} from 'actions/API'
 
 export const DatatableCDN = (props) => {
     const [toggle, setToggle] = useState(true)
@@ -34,14 +34,9 @@ export const DatatableCDN = (props) => {
             }).rows('.selected').data().map(r => r[0])))
         })
 
-        axios({ method: 'GET',
-          url: BASE_URL,
-          data: {},
-          headers: {'Content-Type': 'application/json'}
-        })
-        .then(result => {
+        getAllUserDetails().then(result => {
             table.clear()
-            table.rows.add(result.data).draw();
+            table.rows.add(result).draw();
         })
         return table;
         
@@ -51,14 +46,7 @@ export const DatatableCDN = (props) => {
     
         if (window.confirm(`Are you sure you want to delete:\r ${rows}?`)) {
           // this.setState(state => ({ toggleCleared: !state.toggleCleared, data: differenceBy(state.data, state.selectedRows, 'name') }));
-          axios({
-            method: 'DELETE',
-            url: BASE_URL,
-            data: rows,
-            headers: {
-              'Content-Type': 'application/json',
-            }
-          })
+          deleteSelectedUsers(rows)
             .then(result => {console.log("Delete process done", result)
             setToggle(!toggle)
         }
